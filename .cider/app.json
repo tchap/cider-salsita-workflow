@@ -1,0 +1,24 @@
+{
+  "name": "cider-salsita-workflow",
+  "version": "0.0.1",
+  "description": "Cider application implementing the Salsita development workflow",
+  "variables": {
+    "POBLANO_API_BASE_URL": {
+      "usage": "Poblano API base URL"
+    },
+    "POBLANO_API_TOKEN": {
+      "usage": "Poblano API access token",
+      "secret": true
+    },
+    "POBLANO_API_USERNAME": {
+      "usage": "Poblano API basic auth username",
+      "secret": true,
+      "optional": true
+    },
+    "POBLANO_API_PASSWORD": {
+      "usage": "Poblano API basic auth password",
+      "secret": true,
+      "optional": true
+    }
+  }
+}
