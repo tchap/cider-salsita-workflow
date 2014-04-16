@@ -27,6 +27,26 @@ type Story struct {
 	id      int
 }
 
+func (story *Story) AddTask(inTask *Task) (outTask *Task, resp *http.Response, err error) {
+	if inTask.Description == "" {
+		return nil, nil, &ErrFieldNotSet{"description"}
+	}
+
+	u := fmt.Sprintf("projects/%v/stories/%v/tasks", story.project.id, story.id)
+	req, err := story.project.client.NewRequest("POST", u, inTask)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var task Task
+	resp, err = story.project.client.Do(req, nil)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return &task, resp, err
+}
+
 func (story *Story) ListTasks() ([]*Task, *http.Response, error) {
 	u := fmt.Sprintf("projects/%v/stories/%v/tasks", story.project.id, story.id)
 	req, err := story.project.client.NewRequest("GET", u, nil)
@@ -43,16 +63,18 @@ func (story *Story) ListTasks() ([]*Task, *http.Response, error) {
 	return tasks, resp, err
 }
 
-func (story *Story) AddTask(task *Task) (*http.Response, error) {
-	if task.Description == "" {
-		return nil, &ErrFieldNotSet{"description"}
-	}
-
-	u := fmt.Sprintf("projects/%v/stories/%v/tasks", story.project.id, story.id)
-	req, err := story.project.client.NewRequest("POST", u, task)
+func (story *Story) UpdateTask(inTask *Task) (outTask *Task, resp *http.Response, err error) {
+	u := fmt.Sprintf("projects/%v/stories/%v/tasks/%v", story.project.id, story.id, inTask.Id)
+	req, err := story.project.client.NewRequest("PUT", u, inTask)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return story.project.client.Do(req, nil)
+	var task Task
+	resp, err = story.project.client.Do(req, &task)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return &task, resp, err
 }

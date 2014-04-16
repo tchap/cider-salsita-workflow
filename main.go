@@ -107,7 +107,7 @@ func innerMain(logger *logging.Service) error {
 		return logger.Critical(err)
 	}
 
-	workflow := &Workflow{
+	w := &Workflow{
 		directory: directory,
 		eventBus:  eventBus,
 		logger:    logger,
@@ -118,11 +118,17 @@ func innerMain(logger *logging.Service) error {
 	signal.Notify(signalCh, syscall.SIGINT, syscall.SIGTERM)
 
 	// Link the workflow to events of some importance to it.
-	_, err = eventBus.Subscribe("github.issues", logPanic(logger, workflow.AddPtTaskFromGhIssue))
+	_, err = eventBus.Subscribe("github.issues", logPanic(logger, w.AddPtTaskFromGhIssue))
 	if err != nil {
 		return logger.Critical(err)
 	}
 	logger.Info("Hook enabled: GitHub issue created -> add Pivotal Tracker story task")
+
+	_, err = eventBus.Subscribe("github.issues", logPanic(logger, w.CompletePtTaskOnGhIssueClosed))
+	if err != nil {
+		return logger.Critical(err)
+	}
+	logger.Info("Hook enabled: GitHub issue closed -> complete Pivotal Tracker story task")
 
 	// Block until interrupted.
 	select {
