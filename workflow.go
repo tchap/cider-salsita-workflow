@@ -114,7 +114,7 @@ func (w *Workflow) AddPtTaskFromGhIssue(event pubsub.Event) {
 	log.Debugf("%s: Poblano project record received", caller)
 
 	login := issue.User.Login
-	log.Debugf("%s: Getting the Poblano user record for login %v...", caller, login)
+	log.Debugf("%s: Getting Poblano user record for login %v...", caller, login)
 	user, _, err := gh.GetPoblanoUser(login)
 	if err != nil {
 		log.Errorf("%s: %v", caller, err)
@@ -196,7 +196,7 @@ func (w *Workflow) CompletePtTaskOnGhIssueClosed(event pubsub.Event) {
 	log.Debugf("%s: Poblano project record received", caller)
 
 	login := issue.User.Login
-	log.Debugf("%s: Getting the Poblano user record for login %v...", caller, login)
+	log.Debugf("%s: Getting Poblano user record for login %v...", caller, login)
 	user, _, err := gh.GetPoblanoUser(login)
 	if err != nil {
 		log.Errorf("%s: %v", caller, err)
