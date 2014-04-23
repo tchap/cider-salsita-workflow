@@ -55,8 +55,8 @@ func main() {
 	}
 	// Make sure ZeroMQ is terminated properly.
 	defer func() {
-		logger.Info("Waiting for ZeroMQ context to terminate...\n")
-		logger.Flush()
+		logger.Info("Waiting for ZeroMQ context to terminate...")
+		logger.Close()
 		zmq.Term()
 	}()
 
